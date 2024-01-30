@@ -9,12 +9,16 @@ const Meme = () => {
         }
     )
     const generateImage = () => {
-        const memeArray = MemeData.data.memes;
-        const randomNumber = Math.floor(Math.random() * memeArray.length);
-        const memeUrl = memeArray[randomNumber].url;
+        const randomNumber = Math.floor(Math.random() * allMemeImages.length);
+        const memeUrl = allMemeImages[randomNumber].url;
         updateMeme(prevMeme => ({ ...meme, randomImage: memeUrl }));
     }
-    const [allMemeImages, updateAllMemeImages] = useState(MemeData);
+    const [allMemeImages, updateAllMemeImages] = useState([]);
+    React.useEffect(()=>{
+        fetch("https://api.imgflip.com/get_memes")
+        .then(res => res.json())
+        .then(data=> updateAllMemeImages(data.data.memes))
+    }, [])
     const handleChange = event =>{
         const {name, value} = event.target;
         updateMeme(prevMeme => ({
